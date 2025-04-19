@@ -78,7 +78,7 @@ Poller模块是对epoll进行封装的一个模块，主要实现epoll的IO事�
 
 **EventLoop模块**：
 
-EventLoop模块可以理解就是我们上边所说的Reactor模块，它是对Poller模块，TimerQueue模块，Socket模块的一个整体封装，进行所有描述符的事件监控。
+EventLoop模块可以理解就是我们上边所说的Reactor模块，它**是对Poller模块，TimerQueue模块，Socket模块的一个整体封装，进行所有描述符的事件监控**。
 EventLoop模块必然是一个对象对应一个线程的模块，线程内部的目的就是运行EventLoop的启动函数。
 EventLoop模块为了保证整个服务器的线程安全问题，因此要求使用者对于Connection的所有操作一定要在其对应的EventLoop线程内完成，不能在其他线程中进行（比如组件使用者使用Connection发送数据，以及关闭连接这种操作）。
 EventLoop模块保证自己内部所监控的所有描述符，都要是活跃连接，非活跃连接就要及时释放避免资源浪费。
