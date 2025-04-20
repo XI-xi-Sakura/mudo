@@ -13,10 +13,18 @@ int main()
     std::regex e("(GET|HEAD|POST|PUT|DELETE) ([^?]*)(?:\\?(.*))? (HTTP/1\\.[01])(?:\n|\r\n)?", std::regex::icase);
 
     // GET|HEAD|POST|PUT|DELETE   表示匹配并提取其中任意一个字符串
-    //[^?]*     [^?]匹配非问号字符， 后边的*表示0次或多次
-    //\\?(.*)   \\?  表示原始的？字符 (.*)表示提取?之后的任意字符0次或多次，知道遇到空格
+
+    // [^?]*     [^?]匹配非问号字符， 后边的*表示0次或多次
+
+    // \\?(.*)   \\?  表示原始的？字符 (.*)表示提取?之后的任意字符0次或多次，直到遇到空格
+
     // HTTP/1\\.[01]  表示匹配以HTTP/1.开始，后边有个0或1的字符串
-    //(?:\n|\r\n)?   （?: ...） 表示匹配某个格式字符串，但是不提取， 最后的？表示的是匹配前边的表达式0次或1次
+
+    // (?:\n|\r\n)?   （?: ...)表示匹配某个格式字符串，但是不提取,最后的？表示的是匹配前边的表达式0次或1次
+
+    // std::regex::icase 标志表示匹配时忽略大小写。
+
+    // (?:...) 是一个非捕获组，意味着它只用于匹配，但不会将匹配结果保存到捕获组中。
 
     bool ret = std::regex_match(str, matches, e);
     if (ret == false)
@@ -26,7 +34,7 @@ int main()
 
     std::string method = matches[1];
     std::transform(method.begin(), method.end(), method.begin(), ::toupper);
-    
+
     std::cout << method << std::endl;
 
     for (int i = 0; i < matches.size(); i++)
