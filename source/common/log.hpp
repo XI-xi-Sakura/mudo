@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstdio>
 #include <thread>
+#include <cassert>
 
 #define INF 0
 #define DBG 1
