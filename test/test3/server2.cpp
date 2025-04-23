@@ -1,4 +1,4 @@
-#include "../../source/server/connection.hpp"
+#include "../../source/server/eventLoop.hpp"
 
 #include "../../source/common/socket.hpp"
 
@@ -44,7 +44,7 @@ void HandleEvent(Channel *channel)
     std::cout << "有了一个事件! \n";
 }
 
-void Acceptor(Poller *poller, Channel *lst_channel)
+void Acceptor(EventLoop* loop, Channel *lst_channel)
 {
     int fd = lst_channel->Fd();
     int newfd = accept(fd, NULL, NULL);
@@ -52,7 +52,7 @@ void Acceptor(Poller *poller, Channel *lst_channel)
     {
         return;
     }
-    Channel *channel = new Channel(poller, newfd);
+    Channel *channel = new Channel(loop, newfd);
     channel->SetReadCallback(std::bind(HandleRead, channel));   // 为通信套接字设置可读事件的回调函数
     channel->SetWriteCallback(std::bind(HandleWrite, channel)); // 可写事件的回调函数
     channel->SetCloseCallback(std::bind(HandleClose, channel)); // 关闭事件的回调函数
@@ -63,22 +63,18 @@ void Acceptor(Poller *poller, Channel *lst_channel)
 
 int main()
 {
-    Poller poller;
+    //Poller poller;
+    EventLoop loop;
     Socket lst_sock;
     lst_sock.CreateServer(8500);
     // 为监听套接字，创建一个Channel进行事件的管理，以及事件的处理
-    Channel channel(&poller, lst_sock.Fd());
+    Channel channel(&loop, lst_sock.Fd());
     // 回调中，获取新连接，为新连接创建Channel并且添加监控
-    channel.SetReadCallback(std::bind(Acceptor, &poller, &channel));
+    channel.SetReadCallback(std::bind(Acceptor, &loop, &channel));
     channel.EnableRead(); // 启动可读事件监控
     while (1)
     {
-        std::vector<Channel *> actives;
-        poller.Poll(&actives);
-        for (auto &a : actives)
-        {
-            a->HandleEvent();
-        }
+      loop.Start();
     }
     lst_sock.Close();
     return 0;
