@@ -1,15 +1,16 @@
 #pragma once
 #include "../common/log.hpp"
+#include "poller.hpp"
 #include <sys/epoll.h>
 #include <functional>
 
 class Poller;
-class EventLoop;
+
 class Channel
 {
 private:
     int _fd;
-    EventLoop *_loop;
+    Poller *_poller;
 
     uint32_t _events;  // 当前需要监控的事件
     uint32_t _revents; // 当前连接触发的事件
@@ -21,7 +22,7 @@ private:
     EventCallback _close_callback; // 连接断开事件被触发的回调函数
     EventCallback _event_callback; // 任意事件被触发的回调函数
 public:
-    Channel(EventLoop *loop, int fd) : _fd(fd), _events(0), _revents(0), _loop(loop) {}
+    Channel(Poller *poller, int fd) : _fd(fd), _events(0), _revents(0), _poller(poller) {}
     int Fd() { return _fd; }
     uint32_t Events() { return _events; }                   // 获取想要监控的事件
     void SetREvents(uint32_t events) { _revents = events; } // 设置实际就绪的事件
@@ -98,3 +99,6 @@ public:
             _event_callback();
     }
 };
+
+void Channel::Remove() { return _poller->RemoveEvent(this); }
+void Channel::Update() { return _poller->UpdateEvent(this); }
