@@ -202,5 +202,7 @@ public:
 // 把函数定义放到 Poller 类完整定义之后，编译器就能看到 Poller 类的完整结构，从而正确解析这些函数调用。
 // 之前遇到的 invalid use of incomplete type ‘class Poller’ 错误，就可通过这种方式解决。
 
+// 所以说，poller以及channel就不放在两个头文件了，放在一起就可以了
+
 void Channel::Remove() { return _poller->RemoveEvent(this); }
 void Channel::Update() { return _poller->UpdateEvent(this); }
