@@ -1,6 +1,6 @@
-#include "../../source/server/eventLoop.hpp"
+#include "../../source/eventLoop.hpp"
 
-#include "../../source/common/socket.hpp"
+#include "../../source/socket.hpp"
 
 void HandleClose(Channel *channel)
 {
