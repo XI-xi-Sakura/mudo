@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../common/log.hpp"
+#include "log.hpp"
 
 #include <unistd.h>
 #include <string.h>
-#include <sys/epoll.h>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
+
 #include <sys/epoll.h>
 #include <functional>
 
