@@ -221,7 +221,7 @@ private:
     TaskFunc _task_cb;    // 定时器对象要执行的定时任务
     ReleaseFunc _release; // 用于删除TimerWheel中保存的定时器对象信息
 public:
-    //uint64_t _id--定时器任务对象ID; uint32_t _timeout--定时任务的超时时间
+    // uint64_t _id--定时器任务对象ID; uint32_t _timeout--定时任务的超时时间
     TimerTask(uint64_t id, uint32_t delay, const TaskFunc &cb) : _id(id),
                                                                  _timeout(delay),
                                                                  _task_cb(cb),
