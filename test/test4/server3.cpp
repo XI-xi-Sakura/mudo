@@ -59,7 +59,7 @@ void Acceptor(EventLoop *loop, Channel *lst_channel)
     channel->SetCloseCallback(std::bind(HandleClose, channel));                // 关闭事件的回调函数
     channel->SetErrorCallback(std::bind(HandleError, channel));                // 关闭事件的回调函数
     channel->SetEventCallback(std::bind(HandleEvent, loop, channel, timerid)); // 关闭事件的回调函数
-    loop->TimerAdd(timerid, 10, std::bind(HandleEvent, loop, channel, timerid));
+    loop->TimerAdd(timerid, 10, std::bind(HandleClose, channel));
     channel->EnableRead();
 }
 
