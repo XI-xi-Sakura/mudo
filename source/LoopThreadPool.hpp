@@ -20,7 +20,7 @@ private:
         {
             std::unique_lock<std::mutex> lock(_mutex); // 加锁
             _loop = &loop;
-            _cond.notify_all();
+            _cond.notify_all(); //唤醒所有在条件变量 _cond 上等待的线程
         }
         loop.Start();
     }
