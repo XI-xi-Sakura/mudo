@@ -8,19 +8,24 @@ class TcpServer
 {
 private:
     uint64_t _next_id; // 这是一个自动增长的连接ID，
+
     int _port;
     int _timeout;                                       // 这是非活跃连接的统计时间---多长时间无通信就是非活跃连接
     bool _enable_inactive_release;                      // 是否启动了非活跃连接超时销毁的判断标志
+
     EventLoop _baseloop;                                // 这是主线程的EventLoop对象，负责监听事件的处理
     Acceptor _acceptor;                                 // 这是监听套接字的管理对象
     LoopThreadPool _pool;                               // 这是从属EventLoop线程池
+
     std::unordered_map<uint64_t, PtrConnection> _conns; // 保存管理所有连接对应的shared_ptr对象
 
     using ConnectedCallback = std::function<void(const PtrConnection &)>;
     using MessageCallback = std::function<void(const PtrConnection &, Buffer *)>;
     using ClosedCallback = std::function<void(const PtrConnection &)>;
     using AnyEventCallback = std::function<void(const PtrConnection &)>;
+
     using Functor = std::function<void()>;
+
     ConnectedCallback _connected_callback;
     MessageCallback _message_callback;
     ClosedCallback _closed_callback;
@@ -72,11 +77,13 @@ public:
         _acceptor.SetAcceptCallback(std::bind(&TcpServer::NewConnection, this, std::placeholders::_1));
         _acceptor.Listen(); // 将监听套接字挂到baseloop上
     }
+    
     void SetThreadCount(int count) { return _pool.SetThreadCount(count); }
     void SetConnectedCallback(const ConnectedCallback &cb) { _connected_callback = cb; }
     void SetMessageCallback(const MessageCallback &cb) { _message_callback = cb; }
     void SetClosedCallback(const ClosedCallback &cb) { _closed_callback = cb; }
     void SetAnyEventCallback(const AnyEventCallback &cb) { _event_callback = cb; }
+
     void EnableInactiveRelease(int timeout)
     {
         _timeout = timeout;
