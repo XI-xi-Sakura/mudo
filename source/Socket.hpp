@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "log.hpp"
+#include "Log.hpp"
 
 #define MAX_LISTEN 1024
 class Socket

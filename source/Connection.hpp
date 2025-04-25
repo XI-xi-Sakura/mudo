@@ -20,9 +20,9 @@ using PtrConnection = std::shared_ptr<Connection>;
 class Connection : public std::enable_shared_from_this<Connection>
 {
 private:
-  //uint64_t _timer_id;            // 定时器ID，必须是唯一的，这块为了简化操作使用conn_id作为定时器ID
-    
-    uint64_t _conn_id; // 连接的唯一ID，便于连接的管理和查找
+    // uint64_t _timer_id;            // 定时器ID，必须是唯一的，这块为了简化操作使用conn_id作为定时器ID
+
+    uint64_t _conn_id;             // 连接的唯一ID，便于连接的管理和查找
     int _sockfd;                   // 连接关联的文件描述符
     bool _enable_inactive_release; // 连接是否启动非活跃销毁的判断标志，默认为false
 
@@ -139,6 +139,17 @@ private:
         if (_connected_callback)
             _connected_callback(shared_from_this());
     }
+    // 这个接口并不是实际的发送接口，而只是把数据放到了发送缓冲区，启动了可写事件监控
+    void SendInLoop(Buffer &buf)
+    {
+        if (_statu == DISCONNECTED)
+            return;
+        _out_buffer.WriteBufferAndPush(buf);
+        if (_channel.WriteAble() == false)
+        {
+            _channel.EnableWrite();
+        }
+    }
     // 这个接口才是实际的释放接口
     void ReleaseInLoop()
     {
@@ -158,17 +169,7 @@ private:
         if (_server_closed_callback)
             _server_closed_callback(shared_from_this());
     }
-    // 这个接口并不是实际的发送接口，而只是把数据放到了发送缓冲区，启动了可写事件监控
-    void SendInLoop(Buffer &buf)
-    {
-        if (_statu == DISCONNECTED)
-            return;
-        _out_buffer.WriteBufferAndPush(buf);
-        if (_channel.WriteAble() == false)
-        {
-            _channel.EnableWrite();
-        }
-    }
+
     // 这个关闭操作并非实际的连接释放操作，需要判断还有没有数据待处理，待发送
     void ShutdownInLoop()
     {

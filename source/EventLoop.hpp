@@ -1,6 +1,6 @@
 #pragma once
 
-#include "log.hpp"
+#include "Log.hpp"
 
 #include <unistd.h>
 #include <string.h>

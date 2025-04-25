@@ -5,7 +5,7 @@
 #include <string>
 #include <cstring>
 
-#include "log.hpp"
+#include "Log.hpp"
 
 #define BUFFER_DEFAULT_SIZE 1024
 class Buffer
