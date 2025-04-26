@@ -1,6 +1,4 @@
-#include "./source/TcpServer.hpp"
-#include "./source/Log.hpp"
-#include "../source/Signal.hpp"
+#include "../source/TcpServer.hpp"
 
 void OnConnected(const PtrConnection &conn)
 {
